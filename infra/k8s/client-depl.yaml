@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+  labels:
+    app: ticketing-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-client
+  template:
+    metadata:
+      labels:
+        app: ticketing-client
+    spec:
+      containers:
+        - name: client
+          image: cowculator99/ticketing-client:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-service
+spec:
+  selector:
+    app: client
+  ports:
+    - name: ticketing-lient
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+  labels:
+    app: ticketing-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-auth
+  template:
+    metadata:
+      labels:
+        app: ticketing-auth
+    spec:
+      containers:
+        - name: auth
+          image: cowculator99/ticketing-auth:latest
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: ticketing-auth
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
