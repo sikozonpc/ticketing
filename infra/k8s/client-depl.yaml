@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client-depl
-  labels:
-    app: ticketing-client
 spec:
   replicas: 1
   selector:
@@ -24,7 +22,7 @@ metadata:
   name: client-service
 spec:
   selector:
-    app: client
+    app: ticketing-client
   ports:
     - name: ticketing-lient
       protocol: TCP

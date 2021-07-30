@@ -6,7 +6,7 @@ export default () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { doRequest, errors } = useRequest({
-    url: '/api/users/signup',
+    url: '/api/users/login',
     method: 'post',
     body: {
       email,
