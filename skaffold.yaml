@@ -24,3 +24,11 @@ build:
         manual:
           - src: "**/*.js"
             dest: .
+    - image: cowculator99/ticketing-tickets
+      context: services/tickets # directory name
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.{ts, js}"
+            dest: .

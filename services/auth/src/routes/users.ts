@@ -1,15 +1,11 @@
+import { BadRequestError, currentUser, UnauthorizedError, validateRequest } from '@tfticketing/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { BadRequestError } from '../errors';
-import { UnauthorizedError } from '../errors/unauthorized-error';
-import { currentUser } from '../middlewares/current-user';
-import { validateRequest } from '../middlewares/validate-request';
 import { User } from '../models';
 import { PasswordService } from '../services/password';
-import { getEnv } from '../util/envs';
 
-const BAD_FIELDS_ERROR = 'invalid credentials';
+const JWT_KEY = process.env.JWT_KEY ?? '';
 
 export const authRouter = express.Router();
 
@@ -38,7 +34,7 @@ authRouter.post('/register', [
     const freshUser = User.build({ email, password });
     await freshUser.save();
 
-    const userJWT = jwt.sign({ id: freshUser.id, email: freshUser.email }, getEnv('JWT_KEY'));
+    const userJWT = jwt.sign({ id: freshUser.id, email: freshUser.email }, JWT_KEY);
     
     req.session = { jwt: userJWT };
     res.status(201).send(freshUser);
@@ -64,7 +60,7 @@ authRouter.post('/login',
       throw new UnauthorizedError();
     }
 
-    const userJWT = jwt.sign({ id: user.id, email: user.email }, getEnv('JWT_KEY'));
+    const userJWT = jwt.sign({ id: user.id, email: user.email }, JWT_KEY);
 
     req.session = { jwt: userJWT };
     res.status(200).send('success');

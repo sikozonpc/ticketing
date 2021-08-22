@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
   labels:
-    app: ticketing-auth
+    app: ticketing-tickets
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ticketing-auth
+      app: ticketing-tickets
   template:
     metadata:
       labels:
-        app: ticketing-auth
+        app: ticketing-tickets
     spec:
       containers:
-        - name: auth
-          image: cowculator99/ticketing-auth:latest
+        - name: tickets
+          image: cowculator99/ticketing-tickets:latest
           env:
             - name: JWT_KEY
               valueFrom:
@@ -24,15 +24,15 @@ spec:
                   name: jwt-secret
                   key: JWT_KEY
             - name: MONGO_URI
-              value: mongodb://auth-mongo-service:27017/auth
+              value: mongodb://tickets-mongo-service:27017/tickets
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
+  name: tickets-service
 spec:
   selector:
-    app: ticketing-auth
+    app: ticketing-tickets
   ports:
     - protocol: TCP
       port: 3000

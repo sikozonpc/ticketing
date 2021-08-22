@@ -1,5 +1,5 @@
 import { Express, Router } from 'express';
-import { NotFoundError } from '../errors';
+import { NotFoundError } from '@tfticketing/common';
 import { authRouter } from './users';
 export { authRouter } from './users';
 

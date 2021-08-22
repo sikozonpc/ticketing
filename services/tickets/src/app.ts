@@ -1,8 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
+import { errorHandler, currentUser } from '@tfticketing/common';
 import { routes } from './routes';
-import { NotFoundError, errorHandler } from '@tfticketing/common';
 
 const isTestEnv = process.env.NODE_ENV === 'test';
 
@@ -16,6 +16,8 @@ app.use(cookieSession({
   signed: false,
   secure: !isTestEnv,
 }));
+
+app.use(currentUser);
 routes(app);
 app.use(errorHandler);
 
