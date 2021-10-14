@@ -32,3 +32,11 @@ build:
         manual:
           - src: "src/**/*.{ts, js}"
             dest: .
+    - image: cowculator99/ticketing-orders
+      context: services/orders # directory name
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.{ts, js}"
+            dest: .

@@ -1,7 +1,9 @@
 import { NotFoundError, requireAuth, UnauthorizedError, validateRequest } from '@tfticketing/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
+import { TicketUpdatedPublisher } from '../events/publishers';
 import { Ticket } from '../models/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -32,6 +34,13 @@ router.put('/api/tickets/:id',
       title, price,
     });
     await updatedTicket.save();
+
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: updatedTicket.id,
+      title: updatedTicket.title,
+      price: updatedTicket.price,
+      userId: updatedTicket.userId,
+    });
 
     res.status(200).send(updatedTicket);
   });

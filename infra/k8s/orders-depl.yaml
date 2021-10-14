@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tickets-depl
+  name: orders-depl
   labels:
-    app: ticketing-tickets
+    app: ticketing-orders
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ticketing-tickets
+      app: ticketing-orders
   template:
     metadata:
       labels:
-        app: ticketing-tickets
+        app: ticketing-orders
     spec:
       containers:
-        - name: tickets
-          image: cowculator99/ticketing-tickets:latest
+        - name: orders
+          image: cowculator99/ticketing-orders:latest
           env:
             - name: JWT_KEY
               valueFrom:
@@ -24,23 +24,23 @@ spec:
                   name: jwt-secret
                   key: JWT_KEY
             - name: MONGO_URI
-              value: mongodb://tickets-mongo-service:27017/tickets
+              value: mongodb://orders-mongo-service:27017/orders
             - name: NATS_CLIENT_ID
-              valueFrom:
+              valueFrom: 
                 fieldRef:
                   fieldPath: metadata.name # name of the service pod to match nats logs to a running pod
             - name: NATS_URL
-              value: "http://nats-service:4222"
+              value: 'http://nats-service:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tickets-service
+  name: orders-service
 spec:
   selector:
-    app: ticketing-tickets
+    app: ticketing-orders
   ports:
     - protocol: TCP
       port: 3000

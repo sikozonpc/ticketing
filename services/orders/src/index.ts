@@ -4,6 +4,8 @@ import mongo from './db/mongo';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 import { Stan } from 'node-nats-streaming';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -49,6 +51,10 @@ const start = async () => {
       process.env.NATS_URL,
     );
     await deferCloseNatsWrapper(natsWrapper.client);
+
+    // Listeners
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
 
     await mongo.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB!')
