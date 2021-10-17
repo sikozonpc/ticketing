@@ -1,5 +1,6 @@
 import { OrderStatus } from '@tfticketing/common';
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { TicketDocument } from './ticket';
 
 interface OrderAttributes {
@@ -9,7 +10,9 @@ interface OrderAttributes {
   ticket: TicketDocument;
 }
 
-interface OrderDocument extends mongoose.Document, OrderAttributes { }
+interface OrderDocument extends mongoose.Document, OrderAttributes {
+  version: number;
+}
 
 interface OrderModel extends mongoose.Model<OrderDocument> {
   build: (attrs: OrderAttributes) => OrderDocument;
@@ -42,7 +45,10 @@ const orderSchema = new mongoose.Schema({
   },
 });
 
+// Implements the Optimistic Concurrency Control
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
+
 orderSchema.statics.build = (attrs: OrderAttributes) => new Order(attrs);
 
 export const Order = mongoose.model<OrderDocument, OrderModel>('Order', orderSchema);
-

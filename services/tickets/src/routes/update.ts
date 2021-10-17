@@ -40,6 +40,7 @@ router.put('/api/tickets/:id',
       title: updatedTicket.title,
       price: updatedTicket.price,
       userId: updatedTicket.userId,
+      version: updatedTicket.version,
     });
 
     res.status(200).send(updatedTicket);

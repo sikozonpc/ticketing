@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface TicketAttributes {
   title: string;
@@ -6,7 +7,9 @@ interface TicketAttributes {
   userId: string;
 }
 
-interface TicketDocument extends mongoose.Document, TicketAttributes { }
+interface TicketDocument extends mongoose.Document, TicketAttributes {
+  version: number;
+}
 
 interface TicketModel extends mongoose.Model<TicketDocument> {
   build: (attrs: TicketAttributes) => TicketDocument;
@@ -34,6 +37,10 @@ const ticketSchema = new mongoose.Schema({
     },
   },
 });
+
+// Implements the Optimistic Concurrency Control
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 ticketSchema.statics.build = (attrs: TicketAttributes) => new Ticket(attrs);
 
