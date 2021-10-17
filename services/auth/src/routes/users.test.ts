@@ -10,7 +10,7 @@ describe('user routes /api/users', () => {
           email: 'test@test.com',
           password: 'password',
         })
-        .expect(201)
+        .expect(201);
     })
 
     it('should return a 400 with an invalid email', () => {

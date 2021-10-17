@@ -1,0 +1,12 @@
+name: tests-tickets
+
+# whenever a pull_request is created/re-opened
+on:
+  pull_request
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd services/tickets && npm i && npm run test:ci
