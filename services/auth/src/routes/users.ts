@@ -5,8 +5,6 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models';
 import { PasswordService } from '../services/password';
 
-const JWT_KEY = process.env.JWT_KEY ?? '';
-
 export const authRouter = express.Router();
 
 authRouter.get('/currentuser',
@@ -34,8 +32,12 @@ authRouter.post('/register', [
     const freshUser = User.build({ email, password });
     await freshUser.save();
 
-    const userJWT = jwt.sign({ id: freshUser.id, email: freshUser.email }, JWT_KEY);
-    
+    const userJWT = jwt.sign({
+      id: freshUser.id, email: freshUser.email,
+    },
+      process.env.JWT_KEY!,
+    );
+
     req.session = { jwt: userJWT };
     res.status(201).send(freshUser);
   });
@@ -60,7 +62,11 @@ authRouter.post('/login',
       throw new UnauthorizedError();
     }
 
-    const userJWT = jwt.sign({ id: user.id, email: user.email }, JWT_KEY);
+    const userJWT = jwt.sign({
+      id: user.id, email: user.email,
+    },
+      process.env.JWT_KEY!
+    );
 
     req.session = { jwt: userJWT };
     res.status(200).send('success');
