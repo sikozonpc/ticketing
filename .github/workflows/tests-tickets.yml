@@ -2,8 +2,10 @@ name: tests-tickets
 
 # whenever a pull_request is created/re-opened
 on:
-  pull_request
-  
+  pull_request:
+    paths:
+      - "services/tickets/**"
+
 jobs:
   build:
     runs-on: ubuntu-latest

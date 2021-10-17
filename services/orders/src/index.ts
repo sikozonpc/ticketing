@@ -10,6 +10,7 @@ import { TicketUpdatedListener } from './events/listeners/ticket-updated-listene
 const PORT = process.env.PORT ?? 3000;
 
 const deferCloseNatsWrapper = async (stan: Stan) => {
+
   new Promise<void>((resolve) => {
     stan.on('close', () => {
       console.log('NATS connection closed!');
