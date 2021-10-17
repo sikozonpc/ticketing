@@ -1,4 +1,4 @@
-import { NotFoundError, requireAuth, UnauthorizedError, validateRequest } from '@tfticketing/common';
+import { BadRequestError, NotFoundError, requireAuth, UnauthorizedError, validateRequest } from '@tfticketing/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { TicketUpdatedPublisher } from '../events/publishers';
@@ -28,6 +28,11 @@ router.put('/api/tickets/:id',
 
     if (ticket.userId !== req.currentUser!.id) {
       throw new UnauthorizedError();
+    }
+
+    const isReserved = Boolean(ticket.orderId);
+    if (isReserved) {
+      throw new BadRequestError('cannot edit a reserved ticket');
     }
 
     const updatedTicket = ticket.set({

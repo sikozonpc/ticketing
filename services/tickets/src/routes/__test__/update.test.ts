@@ -41,7 +41,7 @@ describe('PUT /tickets/:id', () => {
       .set('Cookie', authToken)
       .send({ title: '', price: 22 })
       .expect(400);
-    
+
     await request(app).put(`/api/tickets/${res.body.id}`)
       .set('Cookie', authToken)
       .send({ title: 'some-new-title', price: -4 })
@@ -62,4 +62,27 @@ describe('PUT /tickets/:id', () => {
     expect(updatedTicket.title).toEqual('some valid title');
     expect(updatedTicket.price).toEqual(22);
   });
+
+  it('rejects updates if the ticket is reserved', async () => {
+    const authToken = registerTestUser();
+    const res1 = await request(app).post('/api/tickets')
+      .set('Cookie', authToken)
+      .send({ title: 'adsda', price: 420 });
+
+    const createdTicket = await Ticket.findById(res1.body.id);
+    if (!createdTicket) {
+      throw new Error('no ticket');
+    }
+
+    createdTicket.set({
+      orderId: mongoose.Types.ObjectId().toHexString()
+    });
+
+    await createdTicket.save();
+
+    await request(app).put(`/api/tickets/${res1.body.id}`)
+      .set('Cookie', authToken)
+      .send({ title: 'some valid title', price: 420 })
+      .expect(400);
+  })
 });

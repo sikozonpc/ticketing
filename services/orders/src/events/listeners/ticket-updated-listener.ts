@@ -1,4 +1,4 @@
-import { Listener, NotFoundError, Subjects, TicketUpdatedEvent } from '@tfticketing/common';
+import { Listener, Subjects, TicketUpdatedEvent } from '@tfticketing/common';
 import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/ticket';
 import { queueGroupName } from './queue-group-name';

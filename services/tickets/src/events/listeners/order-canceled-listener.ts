@@ -1,22 +1,21 @@
-import { Listener, OrderCreatedEvent, Subjects } from '@tfticketing/common';
+import { Listener, OrderCancelledEvent, Subjects } from '@tfticketing/common';
 import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/ticket';
 import { TicketUpdatedPublisher } from '../publishers';
 import { queueGroupName } from './queue-group-name';
 
-export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
-  readonly subject = Subjects.OrderCreated;
+export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
+  readonly subject = Subjects.OrderCancelled;
   queueGroupName = queueGroupName;
-  async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
-    const { ticket, id } = data;
+  async onMessage(data: OrderCancelledEvent['data'], msg: Message) {
+    const { ticket } = data;
 
     const ticketUpdated = await Ticket.findById(ticket.id);
     if (!ticketUpdated) {
       throw new Error('ticket not found');
     }
 
-    // Mark the ticket as reserved
-    ticketUpdated.set({ orderId: id });
+    ticketUpdated.set({ orderId: null });
 
     await ticketUpdated.save();
 

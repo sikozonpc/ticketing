@@ -9,6 +9,7 @@ interface TicketAttributes {
 
 interface TicketDocument extends mongoose.Document, TicketAttributes {
   version: number;
+  orderId?: string;
 }
 
 interface TicketModel extends mongoose.Model<TicketDocument> {
@@ -28,6 +29,10 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  orderId: { // Order ID means the ticket is reserved
+    type: String,
+    required: false,
+  }
 }, {
   toJSON: {
     versionKey: false,
