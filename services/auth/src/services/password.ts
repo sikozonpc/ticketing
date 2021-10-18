@@ -17,4 +17,4 @@ export class PasswordService {
 
     return buffer.toString('hex') === hashedPassword;
   }
-}
+};
