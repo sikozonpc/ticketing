@@ -1,0 +1,25 @@
+name: deploy-tickets
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "services/tickets/**"
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd services/tickets && docker build -t cowculator99/ticketing-tickets .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push cowculator99/ticketing-tickets
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing-k8s # connects to the cloud provider k8s context
+      - run: kubectl rollout restart deployment tickets-depl
