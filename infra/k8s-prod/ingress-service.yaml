@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules: # All routing rules
+    - host: ticketing.dev # PRODUCTION DOMAIN NAME
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-service
+              servicePort: 3000
+          - path: /api/tickets/?(.*)
+            backend:
+              serviceName: tickets-service
+              servicePort: 3000
+          - path: /api/orders/?(.*)
+            backend:
+              serviceName: orders-service
+              servicePort: 3000 
+          - path: /?(.*) # The client service must be the last one! 
+            backend:
+              serviceName: client-service
+              servicePort: 3000

@@ -4,6 +4,7 @@ deploy:
   kubectl: # Watch everything inside k8s directory. So we dont have to wrtie `kubctl apply` everytime
     manifests: # it also removes all objects related to these config files when we shutdown skaffold.
       - ./infra/k8s/*
+      - ./infra/k8s-dev/*
 build:
   local:
     push: false
