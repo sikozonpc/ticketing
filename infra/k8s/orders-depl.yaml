@@ -18,6 +18,11 @@ spec:
         - name: orders
           image: cowculator99/ticketing-orders:latest
           env:
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: node-env
+                  key: NODE_ENV
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -26,11 +31,11 @@ spec:
             - name: MONGO_URI
               value: mongodb://orders-mongo-service:27017/orders
             - name: NATS_CLIENT_ID
-              valueFrom: 
+              valueFrom:
                 fieldRef:
                   fieldPath: metadata.name # name of the service pod to match nats logs to a running pod
             - name: NATS_URL
-              value: 'http://nats-service:4222'
+              value: "http://nats-service:4222"
             - name: NATS_CLUSTER_ID
               value: ticketing
 ---

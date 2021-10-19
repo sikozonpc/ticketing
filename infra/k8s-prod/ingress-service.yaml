@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules: # All routing rules
-    - host: ticketing.dev # PRODUCTION DOMAIN NAME
+    - host: tiagotaquelim.com # PRODUCTION DOMAIN NAME
       http:
         paths:
           - path: /api/users/?(.*)

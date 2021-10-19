@@ -18,6 +18,11 @@ spec:
         - name: auth
           image: cowculator99/ticketing-auth:latest
           env:
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: node-env
+                  key: NODE_ENV
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
