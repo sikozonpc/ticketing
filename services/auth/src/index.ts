@@ -6,6 +6,7 @@ import { app } from './app';
 const PORT = process.env.PORT ?? 3000;
 
 const start = async () => {
+  console.log(process.env);
   if (!process.env.JWT_KEY) {
     throw new Error('Env JWT_KEY not found!');
   }
