@@ -6,6 +6,9 @@ Get and install `ingress-ngix` https://kubernetes.github.io/ingress-nginx/deploy
 To setup the kubernetes secrets:
 ```bash
 kubectl create secret generic jwt-secret --from-literal=JWT_KEY=132
+
+# Run if on cloud enviroment
+kubectl create secret generic base-url --from-literal=BASE_URL={DOMAIN_NAME}
 ```
 
 ```bash

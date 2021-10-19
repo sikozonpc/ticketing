@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const INGRESS_NGINX = 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local';
+const BASE_URL = process.env.BASE_URL || INGRESS_NGINX;
 
 export default ({ req }) => {
   if (typeof window === 'undefined') {
     // We are on the server
 
     return axios.create({
-      baseURL:
-        INGRESS_NGINX,
+      baseURL: BASE_URL,
       headers: req.headers,
     });
   } else {

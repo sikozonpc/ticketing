@@ -6,13 +6,13 @@ on:
       - master
     paths:
       - "services/client/**"
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd services/client && docker build -t cowculator99/ticketing-client .
+      - run: cd services/client && docker build -t -e NODE_ENV=production -e BASE_URL=http://tiagotaquelim.com cowculator99/ticketing-client .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
