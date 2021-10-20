@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+
+kind: Certificate
+metadata:
+  name: tiagotaqueliom-com-tls
+spec:
+  secretName: tiagotaquelim-com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: tiagotaquelim.com
+  dnsNames:
+    - tiagotaquelim.com
+    - www.tiagotaquelim.com

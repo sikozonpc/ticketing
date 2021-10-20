@@ -5,9 +5,16 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # Let it kmow we have a certificate
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
+  tls:
+    - hosts:
+        - tiagotaquelim.com
+        - www.tiagotaquelim.com
+      secretName: tiagotaquelim-com
   rules: # All routing rules
-    - host: www.tiagotaquelim.com # PRODUCTION DOMAIN NAME
+    - host: tiagotaquelim.com # PRODUCTION DOMAIN NAME
       http:
         paths:
           - path: /api/users/?(.*)
@@ -21,40 +28,27 @@ spec:
           - path: /api/orders/?(.*)
             backend:
               serviceName: orders-service
-              servicePort: 3000 
-          - path: /?(.*) # The client service must be the last one! 
+              servicePort: 3000
+          - path: /?(.*) # The client service must be the last one!
             backend:
               serviceName: client-service
               servicePort: 3000
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
-    service.beta.kubernetes.io/do-loadbalancer-hostname: 'www.tiagotaquelim.com'
-  labels:
-    helm.sh/chart: ingress-nginx-2.0.3
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.32.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
-spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
-    - name: https
-      port: 443
-      protocol: TCP
-      targetPort: https
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/component: controller
+    - host: www.tiagotaquelim.com # We need to have it copied to www
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-service
+              servicePort: 3000
+          - path: /api/tickets/?(.*)
+            backend:
+              serviceName: tickets-service
+              servicePort: 3000
+          - path: /api/orders/?(.*)
+            backend:
+              serviceName: orders-service
+              servicePort: 3000
+          - path: /?(.*) # The client service must be the last one!
+            backend:
+              serviceName: client-service
+              servicePort: 3000

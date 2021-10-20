@@ -13,8 +13,8 @@ app.set('trust proxy', true); // trust the Ingress Nginx load balancer
 
 app.use(cookieSession({
   // since JWTs are tempered protection we can opt-out of cookie encryption to allow other services to read the cookie
-  signed: process.env.NODE_ENV === 'production',
-  secure: !isTestEnv,
+  signed: false,
+  secure: false,
 }));
 
 app.use(currentUser);
