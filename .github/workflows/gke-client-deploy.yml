@@ -1,11 +1,11 @@
-name: Build and Deploy the Auth service to GKE
+name: Build and Deploy the Client service to GKE
 
 on:
   push:
     branches:
       - master
     paths:
-      - "services/auth/**"
+      - "services/client/**"
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: |-
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          cd services/auth && docker build -t cowculator99/ticketing-auth .
+          cd services/auth && docker build -t cowculator99/ticketing-client .
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -46,6 +46,6 @@ jobs:
       - name: Deploy
         run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-          docker push cowculator99/ticketing-auth
-          kubectl rollout restart deployment auth-depl
+          docker push cowculator99/ticketing-client
+          kubectl rollout restart deployment client-depl
           kubectl get services -o wide
