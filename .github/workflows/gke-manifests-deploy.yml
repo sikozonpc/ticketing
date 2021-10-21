@@ -1,11 +1,11 @@
-name: Build and Deploy the Auth service to GKE
+name: Build and Deploy the Manifests to GKE
 
 on:
   push:
     branches:
       - master
     paths:
-      - "services/auth/**"
+      - "infra/**"
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -20,14 +20,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Build
-        run: |-
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          cd services/auth && docker build -t cowculator99/ticketing-auth .
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@v0.2.0
@@ -46,6 +38,5 @@ jobs:
       - name: Deploy
         run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-          docker push cowculator99/ticketing-auth
-          kubectl rollout restart deployment auth-depl
+          kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
           kubectl get services -o wide
