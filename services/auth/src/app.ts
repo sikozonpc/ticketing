@@ -2,9 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
 import { routes } from './routes';
-import { NotFoundError, errorHandler } from '@tfticketing/common';
-
-const isTestEnv = process.env.NODE_ENV === 'test';
+import { errorHandler } from '@tfticketing/common';
 
 const app = express();
 
@@ -18,6 +16,5 @@ app.use(cookieSession({
 }));
 routes(app);
 app.use(errorHandler);
-
 
 export { app };

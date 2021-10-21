@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: gcr.io/learning-gcp-325508/ticketing-auth-service:latest
+          image: cowculator99/ticketing-auth:latest
           env:
             - name: NODE_ENV
               valueFrom:
