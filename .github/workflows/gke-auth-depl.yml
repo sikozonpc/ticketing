@@ -10,7 +10,6 @@ env:
   GKE_CLUSTER: ticketing
   GKE_ZONE: europe-west1-b
   DEPLOYMENT_NAME: auth-depl # TODO: update deployment name if changed in deployment.yaml
-  IMAGE: ticketing-auth-service
 
 jobs:
   setup-build-publish-deploy:
@@ -28,17 +27,6 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          project_id: ${{ secrets.GKE_PROJECT }}
-
-      # Configure Docker to use the gcloud command-line tool as a credential
-      # helper for authentication
-      - run: |-
-          gcloud --quiet auth configure-docker
 
       # Get the GKE credentials so we can deploy to the cluster
       - uses: google-github-actions/get-gke-credentials@v0.2.1
