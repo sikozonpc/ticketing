@@ -22,8 +22,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-      - run: cd services/auth && docker build -t cowculator99/ticketing-auth .
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: |-
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          cd services/auth && docker build -t cowculator99/ticketing-auth .
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -48,6 +49,8 @@ jobs:
 
       # Deploy sample image to the GKE cluster
       - name: Deploy
-      - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-      - run: docker push cowculator99/ticketing-auth
-      - run: kubectl rollout restart deployment auth-depl
+        run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+          docker push cowculator99/ticketing-auth
+          kubectl rollout restart deployment auth-depl
+          kubectl get services -o wide
