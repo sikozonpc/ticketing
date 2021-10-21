@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: |-
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          cd services/auth && docker build -t cowculator99/ticketing-tickets .
+          cd services/tickets && docker build -t cowculator99/ticketing-tickets .
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
